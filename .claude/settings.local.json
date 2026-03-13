@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find 'c:/Users/alper/Desktop/Space Data Project/' -name *.nc -o -name *.csv -o -name *.txt)"
+    ]
+  }
+}
