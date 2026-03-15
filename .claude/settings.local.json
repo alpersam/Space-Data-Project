@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(find 'c:/Users/alper/Desktop/Space Data Project/' -name *.nc -o -name *.csv -o -name *.txt)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(python -c \":*)",
+      "Bash(python -c \"import os; p=''C:/Users/alper/.cdsapirc''; print\\(''is file:'', os.path.isfile\\(p\\)\\); print\\(''is dir:'', os.path.isdir\\(p\\)\\)\")",
+      "Bash(cmd /c \"rmdir /s /q C:\\\\Users\\\\alper\\\\.cdsapirc\")",
+      "Bash(cmd /c \"echo url: https://cds.climate.copernicus.eu/api > C:\\\\Users\\\\alper\\\\.cdsapirc && echo key: YOUR-API-KEY >> C:\\\\Users\\\\alper\\\\.cdsapirc && echo Done\")",
+      "Bash(python -c \"import os; print\\(''is file:'', os.path.isfile\\(''C:/Users/alper/.cdsapirc''\\)\\)\")"
     ]
   }
 }
