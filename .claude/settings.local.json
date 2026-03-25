@@ -7,7 +7,12 @@
       "Bash(python -c \"import os; p=''C:/Users/alper/.cdsapirc''; print\\(''is file:'', os.path.isfile\\(p\\)\\); print\\(''is dir:'', os.path.isdir\\(p\\)\\)\")",
       "Bash(cmd /c \"rmdir /s /q C:\\\\Users\\\\alper\\\\.cdsapirc\")",
       "Bash(cmd /c \"echo url: https://cds.climate.copernicus.eu/api > C:\\\\Users\\\\alper\\\\.cdsapirc && echo key: YOUR-API-KEY >> C:\\\\Users\\\\alper\\\\.cdsapirc && echo Done\")",
-      "Bash(python -c \"import os; print\\(''is file:'', os.path.isfile\\(''C:/Users/alper/.cdsapirc''\\)\\)\")"
+      "Bash(python -c \"import os; print\\(''is file:'', os.path.isfile\\(''C:/Users/alper/.cdsapirc''\\)\\)\")",
+      "Bash(conda run:*)",
+      "Bash(\"C:/Users/alper/AppData/Local/Temp/test_ee2.py\":*)",
+      "Bash(\"C:\\\\Users\\\\alper\\\\.conda\\\\envs\\\\spacedata\\\\python.exe\" \"C:/Users/alper/AppData/Local/Temp/test_ee2.py\")",
+      "Bash(\"C:/Users/alper/AppData/Local/Temp/test_ee3.py\":*)",
+      "Bash(\"C:\\\\Users\\\\alper\\\\.conda\\\\envs\\\\spacedata\\\\python.exe\" \"C:/Users/alper/AppData/Local/Temp/test_ee3.py\")"
     ]
   }
 }
