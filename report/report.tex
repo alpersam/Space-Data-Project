@@ -139,7 +139,7 @@ half of global soybean exports. When droughts hit this area, crop
 yields fall and soybean prices on commodity markets tend to rise.
 The problem is that monitoring soil moisture at the scale of an
 entire agricultural region is not practically possible from the
-ground. The GRACE and GRACE-FO satellite missions measure changes
+ground. The GRACE and GRACE-FO satellite missions \cite{tapley2004grace, landerer2020extending} measure changes
 in terrestrial water storage (TWS) every month at continental scale,
 which gives us an independent way to track drought conditions that
 could potentially predict price movements before harvest data
@@ -163,8 +163,8 @@ becomes available.
   \textbf{Dataset} & \textbf{Details} \\
   \midrule
   GRACE RL06.3M v04 & JPL mascon solution, 0.5°, monthly, Apr 2002 -- Dec 2025 \\
-  ERA5-Land P$-$ET  & ECMWF reanalysis, 0.25°, monthly, 2002--2025 \\
-  MODIS MOD13A3     & Vegetation index (NDVI) from Google Earth Engine, cropland pixels only \\
+  ERA5-Land P$-$ET  & ECMWF reanalysis \cite{hersbach2020era5}, 0.25°, monthly, 2002--2025 \\
+  MODIS MOD13A3     & Vegetation index (NDVI) from Google Earth Engine \cite{gorelick2017gee, didan2021mod13a3}, cropland pixels only \\
   Soybean ZS=F      & CME Group futures via \texttt{yfinance}, 2002--2025 \\
   ENSO ONI          & NOAA sea surface temperature index, 1950--2025 \\
   \bottomrule
@@ -197,7 +197,7 @@ nothing to do with land hydrology.
 
 \subsection{Gain Factors}
 
-The JPL mascon product requires scale factors, called gain factors,
+The JPL mascon product \cite{watkins2015improved} requires scale factors, called gain factors,
 to correct for signal loss introduced during the spherical harmonic
 processing of the raw satellite data. Without applying them, the
 amplitude of water storage changes is underestimated by roughly
@@ -231,7 +231,7 @@ agricultural drought across the whole region.
 \subsection{Statistical Methods}
 
 \begin{itemize}
-  \item \textbf{Augmented Dickey-Fuller (ADF) test:} We tested each
+  \item \textbf{Augmented Dickey-Fuller (ADF) test \cite{dickey1979distribution}:} We tested each
         time series for stationarity before running any regression
         or correlation. Non-stationary series were first-differenced
         until they passed the test. This step is necessary to avoid
@@ -241,7 +241,7 @@ agricultural drought across the whole region.
         returns at different time lags (0 to 12 months). We used
         1000 bootstrap samples to build confidence intervals.
         A positive lag means TWS leads the price series.
-  \item \textbf{Granger causality:} This test checks whether past
+  \item \textbf{Granger causality \cite{granger1969investigating}:} This test checks whether past
         values of TWS help predict soybean returns beyond what the
         price series alone can predict. We tested lags 1 through 6
         and also ran the test in the reverse direction to confirm
@@ -545,6 +545,7 @@ regional water stress that translates satellite hydrology into
 a measurable commodity market signal.
 
 % ============================================================
+\nocite{*}
 \printbibliography[heading=bibintoc, title={References}]
 
 \end{document}
