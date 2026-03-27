@@ -1,0 +1,1 @@
+/home/mattia/Space-Data-Project/GRCTellus.JPL.200204_202512.GLO.RL06.3M.MSCNv04CRI.nc

@@ -7,7 +7,15 @@
       "Bash(python -c \"import os; p=''C:/Users/alper/.cdsapirc''; print\\(''is file:'', os.path.isfile\\(p\\)\\); print\\(''is dir:'', os.path.isdir\\(p\\)\\)\")",
       "Bash(cmd /c \"rmdir /s /q C:\\\\Users\\\\alper\\\\.cdsapirc\")",
       "Bash(cmd /c \"echo url: https://cds.climate.copernicus.eu/api > C:\\\\Users\\\\alper\\\\.cdsapirc && echo key: YOUR-API-KEY >> C:\\\\Users\\\\alper\\\\.cdsapirc && echo Done\")",
-      "Bash(python -c \"import os; print\\(''is file:'', os.path.isfile\\(''C:/Users/alper/.cdsapirc''\\)\\)\")"
+      "Bash(python -c \"import os; print\\(''is file:'', os.path.isfile\\(''C:/Users/alper/.cdsapirc''\\)\\)\")",
+      "Bash(python3 -c \"import xarray as xr; ds = xr.open_dataset\\(''/home/mattia/Space-Data-Project/GRCTellus.JPL.200204_202512.GLO.RL06.3M.MSCNv04CRI.nc''\\); print\\(list\\(ds.data_vars\\)\\); print\\(ds.dims\\); print\\(ds.coords\\)\")",
+      "Bash(python3 -c \"import xarray, statsmodels, lightgbm, shap; print\\(''''OK''''\\)\")",
+      "Bash(python3 -c \"import xarray; print\\(xarray.__version__\\)\")",
+      "Bash(pip --version)",
+      "Bash(conda --version)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -c \"import xarray, statsmodels, lightgbm, shap, netCDF4; print\\(''all OK''\\)\")",
+      "Bash(python3 -c \":*)"
     ]
   }
 }
