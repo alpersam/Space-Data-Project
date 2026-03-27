@@ -1,0 +1,344 @@
+% ============================================================
+%  GRACE TWS & Soybean Futures — ETH Zürich FS2026 Block II
+%  Space Data Project Report  |  Due: 3 April 2026
+% ============================================================
+\documentclass[10pt, twocolumn]{article}
+
+% --- Geometry & spacing -----------------------------------------------
+\usepackage[
+  top=1.8cm, bottom=2cm,
+  left=1.6cm, right=1.6cm,
+  columnsep=0.6cm
+]{geometry}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+
+% --- Fonts & encoding -------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Colour palette ---------------------------------------------------
+\usepackage[dvipsnames]{xcolor}
+\definecolor{accentblue}{HTML}{2563EB}   % section headings
+\definecolor{lightgray}{HTML}{F3F4F6}    % shaded boxes
+\definecolor{darkgray}{HTML}{374151}     % body text
+\definecolor{rulecol}{HTML}{BFDBFE}      % horizontal rules
+
+% --- Section styling --------------------------------------------------
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\bfseries\color{accentblue}}
+  {\thesection.}{0.5em}{}[{\color{rulecol}\titlerule[0.6pt]}]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+\titleformat{\subsection}
+  {\normalfont\small\bfseries\color{darkgray}}
+  {\thesubsection.}{0.4em}{}
+\titlespacing{\subsection}{0pt}{5pt}{2pt}
+
+% --- Header / footer --------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\scriptsize\color{gray} GRACE TWS \& Soybean Futures Prices — ETH Zürich FS2026}
+\fancyhead[R]{\scriptsize\color{gray} Space Data Project}
+\fancyfoot[C]{\scriptsize\thepage}
+
+% --- Graphics & figures -----------------------------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{
+  font=scriptsize,
+  labelfont={bf, color=accentblue},
+  skip=4pt
+}
+\usepackage{subcaption}
+\graphicspath{{../figures/}}
+
+% --- Tables -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+% --- Maths ------------------------------------------------------------
+\usepackage{amsmath, amssymb}
+
+% --- Hyperlinks -------------------------------------------------------
+\usepackage[
+  colorlinks=true,
+  linkcolor=accentblue,
+  citecolor=accentblue,
+  urlcolor=accentblue
+]{hyperref}
+
+% --- Bibliography -----------------------------------------------------
+\usepackage[
+  style=numeric-comp,
+  sorting=none,
+  maxnames=2,
+  minnames=1,
+  doi=false, isbn=false, url=false
+]{biblatex}
+\addbibresource{references.bib}
+
+% --- Utility ----------------------------------------------------------
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.2em, itemsep=1pt, topsep=2pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=1pt, topsep=2pt}
+\usepackage{tcolorbox}
+\tcbset{
+  boxstyle/.style={
+    colback=lightgray, colframe=rulecol,
+    fonttitle=\small\bfseries\color{accentblue},
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt,
+    top=4pt, bottom=4pt
+  }
+}
+
+% ============================================================
+\begin{document}
+
+% --- Title block (one column) -------------------------------------
+\twocolumn[{%
+  \begin{center}
+    {\Large\bfseries\color{accentblue}
+      Do GRACE Terrestrial Water Storage Anomalies\\[3pt]
+      Predict Soybean Futures Prices?}\\[6pt]
+    {\normalsize A Satellite-to-Market Causal Chain Analysis
+      over Brazil's Agricultural Belt}\\[6pt]
+    {\small Alper \textsc{[Surname]}
+      \quad|\quad
+      ETH Zürich — FS2026 Block II Space Data Project
+      \quad|\quad
+      \today}\\[6pt]
+    \color{rulecol}\rule{0.85\textwidth}{1pt}
+  \end{center}
+  \vspace{6pt}
+}]
+
+% ============================================================
+\section{Research Question}
+\label{sec:rq}
+
+% TODO: State the research question concisely (~3–4 sentences).
+% Motivate why TWS from GRACE is a meaningful predictor,
+% why Brazil matters (share of global soy supply), and
+% what the expected physical mechanism is (drought → yield → price).
+
+\begin{tcolorbox}[boxstyle, title=Core Question]
+  \textit{Can monthly GRACE/GRACE-FO terrestrial water storage (TWS) anomalies
+  over Brazil's Cerrado–Mato Grosso agricultural belt predict
+  CME Group soybean futures prices, and if so, with what lag?}
+\end{tcolorbox}
+
+\vspace{4pt}
+% TODO: 1–2 sentences on why this matters (food security, commodity markets).
+
+
+% ============================================================
+\section{Data \& Methods}
+\label{sec:data}
+
+\subsection{Datasets}
+
+% TODO: Fill in each row with version, temporal/spatial resolution, source URL.
+\begin{tabularx}{\columnwidth}{@{} l X @{}}
+  \toprule
+  \textbf{Dataset} & \textbf{Details} \\
+  \midrule
+  GRACE RL06M v03   & JPL mascon solution, monthly, 0.5°, 2002–2023 \\
+  ERA5 P$-$ET       & ECMWF reanalysis, monthly, 0.25°, 1979–present \\
+  MODIS MOD13C2 v061 & 0.05° NDVI, monthly, 2000–present (GEE) \\
+  Soybean futures   & CME Group \texttt{ZS=F} via \texttt{yfinance}, 2002–2023 \\
+  MCD12Q1 land cover & IGBP classes 12 \& 14 (cropland mask) \\
+  \bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+% TODO: Add 1–2 sentences on data access / any preprocessing caveats.
+
+\subsection{Study Region \& Masking}
+
+% TODO: Justify the bounding box [−25°, −8° lat; −60°, −46° lon].
+% Mention land–ocean separation rationale and why ocean cells are excluded.
+% Reference Figure~\ref{fig:region} for a map.
+
+\subsection{GRACE Gain Factors}
+
+% TODO: Explain why gain factors (scaling coefficients) are applied to
+% mascon solutions, cite the JPL RL06M gain factor file, and describe
+% how they were applied in the analysis.
+
+\subsection{Data Gap Treatment}
+
+% TODO: Describe the 2017-07 to 2018-05 GRACE gap.
+% State the interpolation strategy used (linear / cubic spline).
+% Explain why gap months are excluded from Granger causality tests.
+
+\subsection{EOF / PCA Analysis}
+
+% TODO: Justify using EOF to filter spatial noise and extract the dominant
+% TWS mode. State how many EOFs were retained (variance explained).
+% Explain why PC1 is used as the "GRACE drought index".
+% Note parameter choices: area-weighted covariance, detrending.
+
+\subsection{Statistical Methods}
+
+% TODO: Briefly describe each method and why it was chosen:
+%   • ADF test — stationarity check before time-series regression
+%   • Bootstrap cross-correlation — identify optimal lag
+%   • Granger causality — test predictive power of TWS for price
+%   • Event study — qualitative validation against known droughts
+
+\subsection{THREE-STEP Causal Chain}
+
+% TODO: Describe the TWS → NDVI → Price pathway.
+% State expected lags: TWS→NDVI ~1–2 m; NDVI→Price ~3–4 m; total ~4–6 m.
+% This is the novel contribution relative to a direct TWS→Price link.
+
+
+% ============================================================
+\section{Analysis Workflow}
+\label{sec:workflow}
+
+% TODO: Walk through the notebook structure at a high level.
+% Show that you understand what each step does — not just that it runs.
+% A numbered list or small diagram works well here.
+
+\begin{enumerate}
+  \item \textbf{Loading \& masking} — read JPL mascon NetCDF, apply
+        land mask and study-region bounding box.
+  \item \textbf{Area-weighted TWS series} — compute spatially aggregated
+        anomaly; apply gain factors.
+  \item \textbf{Gap interpolation} — fill 2017–2018 gap; flag months.
+  \item \textbf{EOF decomposition} — extract PC1 as drought index.
+  \item \textbf{ERA5 P$-$ET} — download or synthesise net water balance.
+  \item \textbf{MODIS NDVI} — pull cropland-masked monthly NDVI via GEE.
+  \item \textbf{Futures ingestion} — download \texttt{ZS=F}; compute
+        log-returns; ADF test.
+  \item \textbf{Cross-correlation} — bootstrap CI; identify best lag.
+  \item \textbf{Granger causality} — test at lags 1–6 months; report
+        F-statistic \& p-value.
+  \item \textbf{Event study} — overlay TWS with 2005, 2010, 2015, 2021
+        drought years.
+  \item \textbf{Backtest} — illustrative long signal when
+        TWS $< -1\sigma$, shifted by best lag.
+\end{enumerate}
+
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+
+% TODO: Report key quantitative findings.
+% Reference each figure explicitly (Fig.~\ref{fig:...}).
+% Keep prose tight — let figures do the heavy lifting.
+
+\subsection{TWS Anomaly Variability}
+
+% TODO: Describe PC1 variance explained, seasonal cycle, drought years visible.
+% Insert Figure 1 (TWS time series + PC1).
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\columnwidth]{fig1_tws_timeseries.pdf}
+  \rule{\columnwidth}{0.4pt}          % placeholder — remove when figure ready
+  \vspace{60pt}
+  \caption{GRACE TWS anomaly (area-weighted) and EOF-derived PC1 drought index
+    over Brazil's agricultural belt, 2002–2023. Grey band marks the
+    2017–2018 data gap.}
+  \label{fig:tws}
+\end{figure}
+
+\subsection{Cross-Correlation \& Lag Structure}
+
+% TODO: State optimal lag (months), correlation coefficient, bootstrap 95% CI.
+% Insert Figure 2 (cross-correlogram with CI).
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\columnwidth]{fig2_crosscorr.pdf}
+  \rule{\columnwidth}{0.4pt}
+  \vspace{50pt}
+  \caption{Bootstrap cross-correlation between TWS PC1 and soybean
+    log-returns. Shaded band = 95\% CI. Positive lag indicates TWS leads.}
+  \label{fig:xcorr}
+\end{figure}
+
+\subsection{Granger Causality}
+
+% TODO: Table of F-statistics / p-values for lags 1–6.
+% State whether null (TWS does not Granger-cause price) is rejected.
+
+\subsection{Causal Chain: TWS \texorpdfstring{$\to$}{->} NDVI \texorpdfstring{$\to$}{->} Price}
+
+% TODO: Describe correlation TWS–NDVI and NDVI–Price at respective lags.
+% Insert Figure 3 or 4 (scatter or lagged series).
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\columnwidth]{fig5_causal_chain.pdf}
+  \rule{\columnwidth}{0.4pt}
+  \vspace{50pt}
+  \caption{Three-step causal chain diagram and scatter plots:
+    TWS $\to$ NDVI (lag $\sim$1–2 m) and NDVI $\to$ soybean price
+    (lag $\sim$3–4 m).}
+  \label{fig:chain}
+\end{figure}
+
+
+% ============================================================
+\section{Interpretation \& Discussion}
+\label{sec:discussion}
+
+% TODO: Interpret results in physical/economic terms.
+% Address the following points:
+
+\subsection{Physical Interpretation}
+
+% TODO: Why does TWS lead prices by X months?
+% Link to crop growth calendar, harvest reporting lags, market anticipation.
+
+\subsection{Comparison with ERA5 P$-$ET}
+
+% TODO: Does the ERA5 water balance corroborate the GRACE TWS signal?
+% Discuss agreement / discrepancy (groundwater vs. surface water).
+
+\subsection{Limitations}
+
+\begin{itemize}
+  \item GRACE $\sim$300 km spatial resolution may average over heterogeneous
+        agri-zones; mascon leakage at the coast.
+  \item Soybean futures reflect \emph{global} supply, not Brazil alone
+        (Argentina, US harvest also priced in).
+  \item Only 21 years of joint coverage — limited statistical power for
+        rare extreme events.
+  \item % TODO: add any further limitations discovered during analysis.
+\end{itemize}
+
+\subsection{One Thing That Surprised Us}
+
+% TODO: Describe one unexpected result, dataset issue, or limitation
+% you encountered. Be specific and honest — this is valued by the graders.
+% Example candidates:
+%   • Granger test sensitive to lag order selection
+%   • ERA5 P−ET shows opposite sign to TWS in certain seasons
+%   • NDVI signal weaker than expected in cropland-only mask
+%   • Backtest performance collapses after 2016 (GRACE data gaps)
+
+
+% ============================================================
+\section*{Conclusion}
+\label{sec:conclusion}
+
+% TODO: 3–4 sentences summarising the main finding and its significance.
+% Avoid introducing new information here.
+
+
+% ============================================================
+\printbibliography[heading=bibintoc, title={References}]
+
+\end{document}
