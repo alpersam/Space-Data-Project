@@ -1,0 +1,545 @@
+% ============================================================
+%  GRACE TWS & Soybean Futures — ETH Zürich FS2026 Block II
+%  Space Data Project Report  |  Due: 3 April 2026
+% ============================================================
+\documentclass[10pt, twocolumn]{article}
+
+% --- Geometry & spacing -----------------------------------------------
+\usepackage[
+  top=1.8cm, bottom=2cm,
+  left=1.6cm, right=1.6cm,
+  columnsep=0.6cm
+]{geometry}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+\raggedbottom
+
+% --- Fonts & encoding -------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Colour palette ---------------------------------------------------
+\usepackage[dvipsnames]{xcolor}
+\definecolor{accentblue}{HTML}{2563EB}
+\definecolor{lightgray}{HTML}{F3F4F6}
+\definecolor{darkgray}{HTML}{374151}
+\definecolor{rulecol}{HTML}{BFDBFE}
+
+% --- Section styling --------------------------------------------------
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\bfseries\color{accentblue}}
+  {\thesection.}{0.5em}{}[{\color{rulecol}\titlerule[0.6pt]}]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+\titleformat{\subsection}
+  {\normalfont\small\bfseries\color{darkgray}}
+  {\thesubsection.}{0.4em}{}
+\titlespacing{\subsection}{0pt}{5pt}{2pt}
+
+% --- Header / footer --------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\scriptsize\color{gray}GRACE TWS \& Soybean Futures --- ETH Zürich FS2026}
+\fancyhead[R]{\scriptsize\color{gray}Space Data Project}
+\fancyfoot[C]{\scriptsize\thepage}
+
+% --- Graphics & figures -----------------------------------------------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{
+  font=scriptsize,
+  labelfont={bf, color=accentblue},
+  skip=4pt
+}
+\usepackage{subcaption}
+\graphicspath{{../figures/}}
+
+% --- Tables -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+% --- Maths ------------------------------------------------------------
+\usepackage{amsmath, amssymb}
+
+% --- Hyperlinks -------------------------------------------------------
+\usepackage[
+  colorlinks=true,
+  linkcolor=accentblue,
+  citecolor=accentblue,
+  urlcolor=accentblue
+]{hyperref}
+
+% --- Bibliography -----------------------------------------------------
+\usepackage[
+  style=numeric-comp,
+  sorting=none,
+  maxnames=2,
+  minnames=1,
+  doi=false, isbn=false, url=false
+]{biblatex}
+\addbibresource{references.bib}
+
+% --- Utility ----------------------------------------------------------
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.2em, itemsep=1pt, topsep=2pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=1pt, topsep=2pt}
+\usepackage{tcolorbox}
+\tcbset{
+  boxstyle/.style={
+    colback=lightgray, colframe=rulecol,
+    fonttitle=\small\bfseries\color{accentblue},
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt,
+    top=4pt, bottom=4pt
+  }
+}
+
+% ============================================================
+\begin{document}
+
+% --- Title block (spans both columns) ---------------------------------
+\twocolumn[{%
+  \begin{center}
+    {\Large\bfseries\color{accentblue}
+      Do GRACE Terrestrial Water Storage Anomalies\\[3pt]
+      Predict Soybean Futures Prices?}\\[6pt]
+    {\normalsize A Satellite-to-Market Causal Chain Analysis
+      over Brazil's Agricultural Belt}\\[6pt]
+    {\small Alper \textsc{Sametoglu} \quad\&\quad Mattia \textsc{De Martino}
+      \quad|\quad
+      ETH Zürich --- FS2026 Block II Space Data Project
+      \quad|\quad
+      3 April 2026}\\[6pt]
+    \color{rulecol}\rule{0.85\textwidth}{1pt}
+  \end{center}
+  \vspace{4pt}
+
+}]
+
+% ============================================================
+\section{Research Question}
+\label{sec:rq}
+
+Brazil's Cerrado and Mato Grosso region is responsible for roughly
+half of global soybean exports. When droughts hit this area, crop
+yields fall and soybean prices on commodity markets tend to rise.
+The problem is that monitoring soil moisture at the scale of an
+entire agricultural region is not practically possible from the
+ground. The GRACE and GRACE-FO satellite missions \cite{tapley2004grace, landerer2020extending} measure changes
+in terrestrial water storage (TWS) every month at continental scale,
+which gives us an independent way to track drought conditions that
+could potentially predict price movements before harvest data
+becomes available.
+
+\begin{tcolorbox}[boxstyle, title=Research Question]
+  \textit{To what extent do GRACE-derived terrestrial water storage
+  anomalies over Brazil's central-southern agricultural belt
+  (Mato Grosso, Goiás, Paraná) anticipate variations in
+  international soybean futures prices, and what is the temporal
+  lag structure between hydrological stress and commodity market
+  response?}
+\end{tcolorbox}
+
+% ============================================================
+\columnbreak
+\section{Data and Methods}
+\label{sec:data}
+
+\subsection{Datasets}
+
+We used five datasets in this analysis. After aligning them to the
+same time axis, we ended up with 214 months of data from
+April 2002 to December 2025 with no missing months.
+
+\begin{tabularx}{\columnwidth}{@{} l X @{}}
+  \toprule
+  \textbf{Dataset} & \textbf{Details} \\
+  \midrule
+  GRACE RL06.3M v04 & JPL mascon solution, 0.5°, monthly, Apr 2002 -- Dec 2025 \\
+  ERA5-Land P$-$ET  & ECMWF reanalysis \cite{hersbach2020era5}, 0.25°, monthly, 2002--2025 \\
+  MODIS MOD13A3     & Vegetation index (NDVI) from Google Earth Engine \cite{gorelick2017gee, didan2021mod13a3}, cropland pixels only \\
+  Soybean ZS=F      & CME Group futures via \texttt{yfinance}, 2002--2025 \\
+  ENSO ONI          & NOAA sea surface temperature index, 1950--2025 \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Study Region and Land Masking}
+
+We chose the bounding box between $25^\circ$S--$8^\circ$S latitude
+and $60^\circ$W--$46^\circ$W longitude because it covers the three
+main soybean-producing states: Mato Grosso, Goiás, and Paraná
+(Figure~\ref{fig:tws_map}). We excluded ocean pixels using the JPL
+land mask before computing the regional average, because GRACE
+mascons near coastlines can pick up ocean tidal signals that have
+nothing to do with land hydrology.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig1_tws_trend_map.png}
+  \caption{GRACE TWS linear trend map for 2002--2025. The dashed box
+    marks our study region. The red areas over the Cerrado and Paraná
+    show a long-term drying trend that is consistent with ongoing
+    deforestation and regional climate change.}
+  \label{fig:tws_map}
+\end{figure}
+
+\subsection{Gain Factors}
+
+The JPL mascon product \cite{watkins2015improved} requires scale factors, called gain factors,
+to correct for signal loss introduced during the spherical harmonic
+processing of the raw satellite data. Without applying them, the
+amplitude of water storage changes is underestimated by roughly
+20--40\% in areas with large variability. We applied the gain factors
+from the companion JPL file to each grid cell before computing the
+regional average.
+
+\subsection{Handling the GRACE Data Gap}
+
+The 2017--2018 gap between the GRACE and GRACE-FO missions is filled
+internally in the v04 mascon product, so we did not need to
+interpolate anything manually. We still excluded those months from
+the Granger causality tests to be safe.
+
+\subsection{EOF Analysis}
+
+We used Empirical Orthogonal Function (EOF) analysis to extract
+the dominant pattern of water storage variability from the full
+two-dimensional GRACE grid. Rather than simply averaging all grid
+cells, EOF analysis separates the main regional signal from local
+noise. We used an area-weighted covariance matrix so that larger
+cells near the edge of the region do not have more influence than
+they should. The first EOF (EOF1) explained 58.5\% of the
+total variance, which is much more than EOF2 at 19.9\%. This large
+gap between the two means that one single pattern dominates, so we
+used its time series (PC1) as our drought index throughout the rest
+of the analysis. Using PC1 instead of the raw area-average also
+reduces the effect of small-scale patterns that are not related to
+agricultural drought across the whole region.
+
+\subsection{Statistical Methods}
+
+\begin{itemize}
+  \item \textbf{Augmented Dickey-Fuller (ADF) test \cite{dickey1979distribution}:} We tested each
+        time series for stationarity before running any regression
+        or correlation. Non-stationary series were first-differenced
+        until they passed the test. This step is necessary to avoid
+        finding spurious correlations between trending series.
+  \item \textbf{Bootstrap cross-correlation:} We computed the
+        Pearson correlation between the TWS index and soybean
+        returns at different time lags (0 to 12 months). We used
+        1000 bootstrap samples to build confidence intervals.
+        A positive lag means TWS leads the price series.
+  \item \textbf{Granger causality \cite{granger1969investigating}:} This test checks whether past
+        values of TWS help predict soybean returns beyond what the
+        price series alone can predict. We tested lags 1 through 6
+        and also ran the test in the reverse direction to confirm
+        the causal direction.
+  \item \textbf{ENSO partial correlation:} We removed the influence
+        of El Niño/La Niña (measured by the ONI index) from both
+        series to check whether the TWS signal is driven by ENSO
+        or carries independent information.
+  \item \textbf{Sobel mediation test:} We tested whether NDVI acts
+        as an intermediate link in the chain from TWS to price, or
+        whether the effect is direct.
+\end{itemize}
+
+% ============================================================
+\section{Analysis Workflow}
+\label{sec:workflow}
+
+The full analysis is contained in a single notebook,
+\texttt{main.ipynb}, which can be run from top to bottom. The steps
+are as follows:
+
+\begin{enumerate}
+  \item Load and mask the GRACE NetCDF file, apply the land mask and
+        study region bounding box, and multiply by gain factors.
+  \item Compute the area-weighted regional TWS time series using
+        $\bar{h}(t) = \sum_i w_i \cdot h_i(t)$ where weights are
+        proportional to $\cos\phi_i$.
+  \item Run EOF decomposition on the detrended TWS grid and extract
+        PC1 as the drought index.
+  \item Download ERA5 precipitation minus evapotranspiration from
+        the Copernicus CDS and regrid to 0.5 degrees.
+  \item Pull the cropland-masked NDVI time series from Google Earth
+        Engine and save it to a local CSV file.
+  \item Download soybean futures from Yahoo Finance, resample to
+        monthly frequency, and compute log-returns.
+  \item Run ADF tests on all series and their first differences.
+  \item Compute the bootstrap cross-correlation and find the best
+        predictive lag.
+  \item Run partial correlation after removing the ENSO signal.
+  \item Run Granger causality in both directions for lags 1--6.
+  \item Run the Sobel mediation test for the TWS to NDVI to price path.
+  \item Produce the event study for the 2005, 2010, 2015, and 2021
+        droughts.
+  \item Run the illustrative backtest and export all figures.
+\end{enumerate}
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{TWS Signal and EOF Decomposition}
+
+The regional TWS anomaly ranged from $-33.14$ cm during the 2021
+drought to $+26.10$ cm during a wet period, with a long-term mean
+of $-3.52$ cm and a standard deviation of $13.79$ cm. Figure
+\ref{fig:eof} shows both the spatial pattern of EOF1 and its
+corresponding time series. The loading pattern is concentrated over
+the agricultural belt and the PC1 time series clearly captures the
+four drought episodes we focused on.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig2_eof_pc1.png}
+  \caption{Top: spatial loading of EOF1 over the study region. Bottom:
+    the PC1 time series used as the GRACE drought index. EOF1 explains
+    58.5\% of total TWS variance. Shaded areas mark the four major
+    drought episodes.}
+  \label{fig:eof}
+\end{figure}
+
+\subsection{Multi-Signal Overview}
+
+Figure~\ref{fig:overlay} shows all four main time series together.
+Looking at the plot, TWS minima tend to occur a few months before
+soybean price spikes, which is the pattern we expected based on the
+growing season calendar. The ERA5 water balance and NDVI series
+broadly track the TWS signal, though with less amplitude.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig3_overlay.png}
+  \caption{All four time series plotted together for 2002--2025:
+    GRACE TWS anomaly (blue), MODIS cropland NDVI anomaly (green),
+    ERA5 precipitation minus evapotranspiration (orange), and soybean
+    log-returns (red). The dashed vertical lines mark drought onset
+    months and the arrows indicate the approximate five-month lead
+    of TWS before the price response.}
+  \label{fig:overlay}
+\end{figure*}
+
+\subsection{Cross-Correlation and Optimal Lag}
+
+The cross-correlation analysis (Figure~\ref{fig:ccf_granger}) shows
+the strongest negative correlation at lag 5 months
+($r = -0.277$, with a 95\% confidence interval bound of $\pm 0.134$).
+The negative sign makes physical sense: when TWS decreases (drought),
+soybean prices tend to increase five months later. Lags 4 and 6 are
+also statistically significant ($r = -0.183$ and $r = -0.166$),
+which suggests that the predictive signal is spread across a window
+of a few months rather than concentrated at a single lag.
+
+The rolling correlation analysis (Figure~\ref{fig:rolling}) shows
+that the 60-month rolling correlation at lag 5 is negative in
+all windows across the full 2002--2025 period, with a mean
+of $-0.291$. This tells us that the relationship is not caused by
+a single unusual episode but holds consistently over time.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig4_correlogram_granger.png}
+  \caption{Top: bootstrap cross-correlation between $\Delta$TWS and
+    soybean log-returns at lags 0 to 12 months. The dashed lines
+    are the 95\% confidence interval bounds. Bottom: Granger test
+    p-values for each lag, with the dashed line at $p = 0.05$.}
+  \label{fig:ccf_granger}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_rolling_corr.png}
+  \caption{Rolling 60-month Pearson correlation between $\Delta$TWS
+    and soybean log-returns at a lag of 5 months. The mean
+    correlation is $-0.291$ and all windows remain negative
+    throughout the entire study period.}
+  \label{fig:rolling}
+\end{figure}
+
+\subsection{Spectral Coherence}
+
+Figure~\ref{fig:coherence} shows the squared coherence between the
+TWS index and soybean log-returns across different frequencies. The
+highest coherence value is 0.571, which occurs at a period
+of around 9.6 months. This near-annual peak is consistent with the
+idea that the relationship is driven by the agricultural growing
+season, which repeats on a roughly yearly cycle.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_coherence.png}
+  \caption{Squared spectral coherence between the TWS drought index
+    and soybean log-returns. The peak of 0.571 near the 9.6-month
+    period reflects the dominant annual growing-season signal.}
+  \label{fig:coherence}
+\end{figure}
+
+\subsection{ENSO Control and Granger Causality}
+
+When we removed the ENSO signal from both time series, the
+correlation at lag 5 barely changed: partial $r = -0.275$ compared
+to the raw $r = -0.277$. This means that the relationship between
+TWS and soybean prices is not simply a reflection of El Niño or
+La Niña events; GRACE is capturing drought information that is
+unrelated to the state of the tropical Pacific.
+
+The Granger causality test shows that past values of $\Delta$TWS
+significantly improve the prediction of soybean returns at lag 5
+($F = 4.27$, $p = 0.001$). The results are summarised in
+Table~\ref{tab:granger}. Importantly, the reverse test (whether
+soybean prices help predict TWS) is not significant ($p = 0.766$),
+which confirms that the causal direction runs from water storage
+to prices and not the other way around.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Granger causality test results for
+    $\Delta$TWS $\to$ soybean log-returns at each lag.}
+  \label{tab:granger}
+  \begin{tabular}{@{}ccc@{}}
+    \toprule
+    Lag (months) & F-statistic & p-value \\
+    \midrule
+    1 & 3.92 & 0.049 \\
+    2 & 2.64 & 0.074 \\
+    3 & 1.81 & 0.146 \\
+    4 & 3.30 & 0.012 \\
+    \textbf{5} & \textbf{4.27} & \textbf{0.001} \\
+    6 & 3.27 & 0.004 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Causal Chain and Backtest}
+
+Figure~\ref{fig:causal} shows the three-step causal chain analysis.
+The Sobel mediation test showed that NDVI does not significantly
+carry the TWS effect to prices (indirect path $p = 0.908$). The
+connection between TWS and soybean prices appears to be mostly
+direct, without NDVI acting as a measurable intermediate step at
+monthly resolution.
+
+The illustrative backtest (Figure~\ref{fig:backtest}) tests a simple
+strategy: go long on soybean futures when the TWS z-score drops
+below $-1\sigma$, entering five months later. The strategy was
+active in only 15\% of months but achieved a Sharpe ratio of
+\textbf{0.34} compared to 0.15 for a simple buy-and-hold approach,
+with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig5_causal_chain.png}
+  \caption{Three-step causal chain: scatter plots for the
+    TWS to NDVI path (lag 1--2 months), the NDVI to price path
+    (lag 3--4 months), and the direct TWS to price path (lag 5
+    months). The Sobel test confirms that the direct path is the
+    dominant one and that NDVI does not act as a significant
+    intermediary at monthly time resolution.}
+  \label{fig:causal}
+\end{figure*}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig6_backtest.png}
+  \caption{Illustrative backtest result (for academic purposes only):
+    cumulative return of the TWS drought strategy (blue) compared
+    to soybean buy-and-hold (grey). The strategy is active in 15\%
+    of months and achieves a Sharpe ratio of 0.34 with a maximum
+    drawdown of only $-24\%$.}
+  \label{fig:backtest}
+\end{figure}
+
+% ============================================================
+\section{Interpretation and Discussion}
+\label{sec:discussion}
+
+\subsection{Physical Interpretation of the Five-Month Lag}
+
+The five-month lag fits well with the Brazilian soybean growing
+calendar. Droughts typically develop during the austral winter
+(July to September), which is when soil moisture should be
+recharging ahead of the planting season starting in October.
+If water storage is already low by August, yield forecasts for
+the upcoming harvest start to be revised downward in
+January and February. Soybean futures prices then reflect these
+expected losses roughly four to six months after the initial
+drought signal, just before the main delivery period in April
+and May.
+
+\subsection{Why NDVI Does Not Act as an Intermediary}
+
+We expected NDVI to sit between TWS and price as the visible sign
+of crop stress. The Granger test for the TWS to NDVI path was not
+significant ($p = 0.645$), which we found surprising at first. One
+explanation is that vegetation stress develops and recovers on
+timescales of days to two weeks, which is much faster than a monthly
+satellite composite can capture. It is also possible that the IGBP
+cropland mask we used does not perfectly match the soybean growing
+areas, which would dilute the NDVI signal. In practice, the futures
+market likely reacts to higher frequency data such as weekly NDVI or
+crop condition reports from agricultural agencies, rather than to
+the monthly average we computed here.
+
+\subsection{Limitations}
+
+\begin{itemize}
+  \item The GRACE spatial resolution of around 300 km means that
+        our regional average mixes different land cover types. Some
+        of what we measure as TWS change may come from areas that
+        are not actually growing soybeans.
+  \item Soybean futures are a global price and also reflect
+        harvests in Argentina and the United States. Droughts
+        elsewhere or good harvests in competing countries can
+        offset the Brazilian signal.
+  \item We only have four major drought events in our study period,
+        which limits how much we can say statistically from the
+        event study alone.
+  \item If commodity traders start systematically using GRACE data,
+        the market would likely price in the drought signal faster
+        and the five-month predictive window would shrink.
+\end{itemize}
+
+\subsection{One Thing That Surprised Us}
+
+The result that surprised us most was how little the ENSO index
+mattered. Before running the analysis, we assumed that most of the
+drought signal detected by GRACE in Brazil would simply be a
+reflection of El Niño and La Niña events, since it is well known
+that ENSO strongly influences rainfall in South America. If that
+were true, GRACE would just be a slow and indirect way of measuring
+something that can already be tracked through sea surface
+temperatures. Instead, removing the ENSO signal from both series
+changed the correlation by only $\Delta r = 0.002$. This suggests
+that GRACE is picking up drought conditions that are driven by
+other factors, possibly including changes in land use and
+deforestation in the Cerrado that affect local precipitation
+independently of ENSO. This finding makes the GRACE signal more
+interesting as a standalone indicator, rather than just a proxy
+for climate indices that are already well monitored.
+
+% ============================================================
+\section*{Conclusion}
+
+GRACE and GRACE-FO water storage anomalies over Brazil's soybean
+belt are a statistically significant predictor of CME soybean
+futures prices at a five-month horizon ($r = -0.277$,
+Granger $p = 0.001$). The signal is consistent over time, is not
+explained by ENSO, and the causal direction from water storage to
+prices is confirmed. The dominant drought mode captured by EOF1
+(58.5\% of variance) provides a simple single-index summary of
+regional water stress that translates satellite hydrology into
+a measurable commodity market signal.
+
+% ============================================================
+\nocite{*}
+\printbibliography[heading=bibintoc, title={References}]
+
+\end{document}
