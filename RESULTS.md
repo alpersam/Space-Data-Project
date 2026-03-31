@@ -42,6 +42,8 @@
 
 EOF1 dominates (58.5%) — the first principal component (PC1) is used as the **GRACE Drought Index** throughout the analysis. PC1 z-score range: −55.13 to +50.62 (in physical units scaled by EOF loading).
 
+**Drought threshold — why −1σ:** PC1 is standardised (zero mean, unit variance), so z = −1 means TWS is one standard deviation below its long-run average. The −1σ level is the standard climatological convention for "below-normal" hydrology, adopted in drought monitoring systems such as NIDIS and in GRACE-based studies (e.g., Houborg et al. 2012, *Water Resour. Res.*). It is conservative enough to exclude ordinary seasonal troughs (which typically stay within ±0.5σ) while capturing genuine multi-month water deficits that stress crop root zones. Values more negative than −1σ therefore represent anomalously dry conditions that exceed normal seasonal variability — the regime in which yield impacts become likely.
+
 ---
 
 ## 3. Soybean Price Statistics
