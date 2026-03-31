@@ -1,14 +1,14 @@
 """
 utils.py -- GRACE Soybean Analysis helpers
 ==========================================
-Data-loading functions, synthetic-data generators, and statistical utilities.
+Data-loading functions and statistical utilities.
 
 Usage in notebook:
     from utils import (
-        load_grace_mascons, make_synthetic_grace,
-        load_era5, make_synthetic_era5,
-        get_ndvi_gee, make_synthetic_ndvi,
-        get_soybean_prices, make_synthetic_soybean,
+        load_grace_mascons,
+        load_era5,
+        get_ndvi_gee,
+        get_soybean_prices,
         to_monthly, adf_test,
         cross_corr_bootstrap, rolling_corr_at_lag,
         partial_corr_at_lag, run_granger,
@@ -46,35 +46,6 @@ def load_grace_mascons(filepath):
     return tws
 
 
-def make_synthetic_grace(lat_min, lat_max, lon_min, lon_max,
-                          t_start, t_end, gap_start, gap_end, seed=42):
-    """Physically plausible synthetic GRACE TWS: trend + seasonal + drought events."""
-    rng   = np.random.default_rng(seed)
-    times = pd.date_range(t_start, t_end, freq="MS")
-    lats  = np.arange(lat_min, lat_max + 0.5, 1.0)
-    lons  = np.arange(lon_min, lon_max + 0.5, 1.0)
-    nt, nlat, nlon = len(times), len(lats), len(lons)
-    t = np.arange(nt)
-    trend_map = np.outer(np.linspace(-0.12, -0.06, nlat)[::-1],
-                         np.linspace(0.8, 1.2, nlon))
-    mi = np.array([d.month for d in times])
-    seasonal = 8.0 * np.sin(2 * np.pi * (mi - 1) / 12)
-    drought  = np.zeros(nt)
-    for yr, amp, dur in [(2005,-18,18),(2010,-22,20),(2015,-30,24),(2021,-25,18)]:
-        c_arr = np.where([d.year==yr and d.month==9 for d in times])[0]
-        if len(c_arr):
-            c = c_arr[0]; w = np.arange(max(0,c-dur//2), min(nt,c+dur//2))
-            drought[w] += amp * np.exp(-0.5*((w-c)/(dur/4))**2)
-    data = np.zeros((nt, nlat, nlon))
-    for i in range(nt):
-        data[i] = trend_map*t[i] + seasonal[i] + drought[i] + rng.normal(0, 3., (nlat, nlon))
-    gap_mask = (times >= gap_start) & (times <= gap_end)
-    data[gap_mask] = np.nan
-    return xr.DataArray(data, coords={"time": times, "lat": lats, "lon": lons},
-                         dims=["time","lat","lon"],
-                         attrs={"units":"cm","note":"SYNTHETIC -- replace with JPL RL06M"})
-
-
 # ERA5 -----------------------------------------------------------------------
 
 def load_era5(filepath):
@@ -91,21 +62,6 @@ def load_era5(filepath):
     PET_m = (PET * w[np.newaxis,:,np.newaxis]).sum(dim=[lat_key, lon_key]) / \
             (w.sum() * len(ds[lon_key]))
     return PET_m.to_series()
-
-
-def make_synthetic_era5(times, drought_years):
-    """Generate synthetic P-ET series aligned to `times`."""
-    rng = np.random.default_rng(123); t = np.arange(len(times))
-    mi  = np.array([d.month for d in times])
-    seasonal = 50 * np.sin(2*np.pi*(mi-1)/12)
-    drought  = np.zeros(len(times))
-    for yr, amp, dur in [(2005,-40,16),(2010,-50,18),(2015,-65,22),(2021,-55,16)]:
-        c_arr = np.where([d.year==yr and d.month==8 for d in times])[0]
-        if len(c_arr):
-            c = c_arr[0]; w = np.arange(max(0,c-dur//2), min(len(times),c+dur//2))
-            drought[w] += amp*np.exp(-0.5*((w-c)/(dur/4))**2)
-    return pd.Series(-0.15*t + seasonal + drought + rng.normal(0, 8, len(times)),
-                     index=times, name="P_minus_ET_mm")
 
 
 # MODIS NDVI (Google Earth Engine) -------------------------------------------
@@ -150,24 +106,6 @@ def get_ndvi_gee(lat_min, lat_max, lon_min, lon_max,
     return df
 
 
-def make_synthetic_ndvi(times, drought_years):
-    """Synthetic monthly cropland NDVI: seasonal + trend + drought suppression."""
-    rng = np.random.default_rng(77); t = np.arange(len(times))
-    mi  = np.array([d.month for d in times])
-    seasonal = 0.10*np.sin(2*np.pi*(mi-0)/12) + 0.03*np.sin(4*np.pi*(mi-2)/12)
-    base = 0.58 - 0.0003*t
-    ddrop = np.zeros(len(times))
-    for yr, amp, dur in [(2005,-0.07,16),(2010,-0.09,18),(2015,-0.12,22),(2021,-0.10,18)]:
-        c_arr = np.where([d.year==yr and d.month==12 for d in times])[0]
-        if len(c_arr):
-            c = c_arr[0]; w = np.arange(max(0,c-dur//2), min(len(times),c+dur//2))
-            ddrop[w] += amp*np.exp(-0.5*((w-c)/(dur/3))**2)
-    ndvi = np.clip(base + seasonal + ddrop + rng.normal(0, 0.012, len(times)), 0.1, 0.95)
-    df = pd.DataFrame({"NDVI": ndvi, "EVI": ndvi*0.88}, index=times)
-    df.index.name = "date"
-    return df
-
-
 # Soybean futures ------------------------------------------------------------
 
 def get_soybean_prices(start="2002-01-01", end="2026-01-01"):
@@ -183,20 +121,6 @@ def get_soybean_prices(start="2002-01-01", end="2026-01-01"):
         return c
     except Exception as e:
         print(f"yfinance failed: {e}"); return None
-
-
-def make_synthetic_soybean(times, drought_years):
-    """Synthetic soybean price: long-term trend + lagged drought price spikes."""
-    rng = np.random.default_rng(99); t = np.arange(len(times))
-    base = 500 + 4.5*t; spikes = np.zeros(len(times))
-    for yr, amp, lag in [(2005,120,4),(2010,200,5),(2015,160,5),(2021,220,4)]:
-        tm = 9+lag; ty = yr+(tm-1)//12; tm = (tm-1)%12+1
-        c_arr = np.where([d.year==ty and d.month==tm for d in times])[0]
-        if len(c_arr):
-            c = c_arr[0]; w = np.arange(max(0,c-6), min(len(times),c+6))
-            spikes[w] += amp*np.exp(-0.5*((w-c)/3.5)**2)
-    macro = rng.normal(0, 30, len(times)).cumsum()*0.5
-    return pd.Series(np.maximum(base+spikes+macro, 200), index=times, name="soybean_centsbu")
 
 
 # Time-series utilities ------------------------------------------------------
