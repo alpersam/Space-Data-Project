@@ -86,6 +86,9 @@
 ]{biblatex}
 \addbibresource{references.bib}
 
+% --- Float control ----------------------------------------------------
+\usepackage{placeins}
+
 % --- Utility ----------------------------------------------------------
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=1.2em, itemsep=1pt, topsep=2pt}
@@ -250,11 +253,13 @@ agricultural drought across the whole region.
 \end{itemize}
 
 % ============================================================
+\FloatBarrier
 \section{Analysis Workflow}
 \label{sec:workflow}
 
 The full analysis is contained in a single notebook,
-\texttt{main.ipynb}, which can be run from top to bottom. The steps
+\href{https://colab.research.google.com/github/alpersam/Space-Data-Project/blob/main/main.ipynb#scrollTo=ec4d111c}{\texttt{main.ipynb}},
+which can be run from top to bottom. The steps
 are as follows:
 
 \begin{enumerate}
@@ -283,6 +288,7 @@ are as follows:
 \end{enumerate}
 
 % ============================================================
+\FloatBarrier
 \section{Results}
 \label{sec:results}
 
@@ -301,8 +307,10 @@ four drought episodes we focused on.
   \includegraphics[width=\columnwidth]{fig2_eof_pc1.png}
   \caption{Left: spatial loading of EOF1 over the study region. Right:
     the PC1 time series used as the GRACE drought index. EOF1 explains
-    58.5\% of total TWS variance. Shaded areas mark the four major
-    drought episodes.}
+    58.5\% of total TWS variance. Shaded areas mark months where the
+    PC1 z-score falls below $-1$, a threshold chosen as a reasonable
+    indicator of drought conditions, corresponding to roughly one
+    standard deviation below the long-term mean.}
   \label{fig:eof}
 \end{figure}
 
@@ -448,13 +456,17 @@ with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{6cf0f1e6613d3efd9447e7f8136de5bd9c453c19.png}
-  \caption{Three-step causal chain: scatter plots for the
-    TWS to NDVI path (lag 1-2 months), the NDVI to price path
-    (lag 3-4 months), and the direct TWS to price path (lag 5
-    months). The Sobel test confirms that the direct path is the
-    dominant one and that NDVI does not act as a significant
-    intermediary at monthly time resolution.}
+  \includegraphics[width=\textwidth]{fig5_causal_chain.png}
+  \caption{Bootstrap cross-correlation at each step of the proposed
+    causal chain. \textit{Left}: GRACE TWS $\to$ MODIS cropland NDVI
+    (best lag 7 months, $r = -0.084$, not significant). \textit{Centre}:
+    MODIS NDVI $\to$ soybean log-return (best lag 3 months,
+    $r = -0.134$, not significant). \textit{Right}: direct
+    GRACE TWS $\to$ soybean log-return (best lag 5 months,
+    $r = -0.277$, $p < 0.001$). Gray bands are 95\% bootstrap
+    confidence intervals; dashed verticals mark the best lag.
+    Only the direct path (right panel) is statistically significant,
+    consistent with the Sobel mediation result ($p = 0.908$).}
   \label{fig:causal}
 \end{figure*}
 
@@ -470,6 +482,7 @@ with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
 \end{figure}
 
 % ============================================================
+\FloatBarrier
 \section{Interpretation and Discussion}
 \label{sec:discussion}
 
@@ -553,6 +566,7 @@ interesting as a standalone indicator, rather than just a proxy
 for climate indices that are already well monitored.
 
 % ============================================================
+\FloatBarrier
 \section*{Conclusion}
 
 GRACE and GRACE-FO water storage anomalies over Brazil's soybean
