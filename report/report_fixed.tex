@@ -372,6 +372,18 @@ of around 9.6 months. This near-annual peak is consistent with the
 idea that the relationship is driven by the agricultural growing
 season, which repeats on a roughly yearly cycle.
 
+One important caveat: the phase-derived lag at the 9.6-month dominant
+frequency is only about 0.5 months, which appears to contradict the
+5-month predictive lag found in the cross-correlation analysis. These
+two quantities are not directly comparable. The spectral phase measures
+the average timing offset at the \emph{annual cycle} frequency
+specifically, whereas the CCF lag of 5 months reflects the
+\emph{broadband} lag structure that includes lower-frequency
+inter-annual variability linked to drought events. The 5-month CCF
+result should be interpreted as the predictive horizon and the
+spectral analysis as a confirmation of seasonal co-variation, not as
+an independent lag estimate.
+
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{fig_coherence.png}
@@ -477,9 +489,17 @@ and May.
 \subsection{Why NDVI Does Not Act as an Intermediary}
 
 We expected NDVI to sit between TWS and price as the visible sign
-of crop stress. The Granger test for the TWS to NDVI path was not
-significant ($p = 0.645$), which we found surprising at first. One
-explanation is that vegetation stress develops and recovers on
+of crop stress. Neither step of the proposed chain was statistically
+confirmed: the Granger test for the TWS-to-NDVI path was not
+significant ($p = 0.645$), and the NDVI-to-soybean path was also
+not significant ($p = 0.236$ at best lag). The Sobel mediation
+test produced an indirect effect that is effectively zero
+(proportion mediated $= 0.0\%$, $p = 0.908$). The three-step
+causal chain TWS $\to$ NDVI $\to$ price is therefore not supported
+statistically at monthly resolution; the dominant pathway appears
+to be direct.
+
+One explanation is that vegetation stress develops and recovers on
 timescales of days to two weeks, which is much faster than a monthly
 satellite composite can capture. It is also possible that the IGBP
 cropland mask we used does not perfectly match the soybean growing
@@ -501,7 +521,14 @@ the monthly average we computed here.
         offset the Brazilian signal.
   \item We only have four major drought events in our study period,
         which limits how much we can say statistically from the
-        event study alone.
+        event study alone. Two of the four events (2015, 2021) did
+        not produce a detectable soybean price reaction by the
+        event-study algorithm, likely because competing supply
+        factors dominated in those seasons.
+  \item The proposed three-step causal chain (TWS $\to$ NDVI $\to$
+        price) is not supported by the Granger or Sobel tests at
+        monthly resolution. The analysis supports only the direct
+        TWS $\to$ price link.
   \item If commodity traders start systematically using GRACE data,
         the market would likely price in the drought signal faster
         and the five-month predictive window would shrink.
