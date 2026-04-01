@@ -339,49 +339,28 @@ broadly track the TWS signal, though with less amplitude.
 
 \subsection{Cross-Correlation and Optimal Lag}
 
-The cross-correlation analysis (Figure~\ref{fig:ccf_granger}) shows
-the strongest negative correlation at lag 5 months
-($r = -0.277$, with a 95\% confidence interval bound of $\pm 0.134$).
-The negative sign makes physical sense: when TWS decreases (drought),
-soybean prices tend to increase five months later. Lags 4 and 6 are
-also statistically significant ($r = -0.183$ and $r = -0.166$),
-which suggests that the predictive signal is spread across a window
-of a few months rather than concentrated at a single lag.
+The cross-correlation analysis shows the strongest negative
+correlation at lag 5 months ($r = -0.277$, with a 95\% confidence
+interval bound of $\pm 0.134$). The negative sign makes physical
+sense: when TWS decreases (drought), soybean prices tend to increase
+five months later. Lags 4 and 6 are also statistically significant
+($r = -0.183$ and $r = -0.166$), suggesting the predictive signal
+is spread across a window of a few months rather than concentrated
+at a single lag. The bootstrap CCF plot and Granger p-value bar chart
+are available in the Colab notebook.
 
-The rolling correlation analysis (Figure~\ref{fig:rolling}) shows
-that the 60-month rolling correlation at lag 5 is negative in
-all windows across the full 2002-2025 period, with a mean
-of $-0.291$. This tells us that the relationship is not caused by
-a single unusual episode but holds consistently over time.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig4_correlogram_granger.png}
-  \caption{Top: bootstrap cross-correlation between $\Delta$TWS and
-    soybean log-returns at lags 0 to 12 months. The dashed lines
-    are the 95\% confidence interval bounds. Bottom: Granger test
-    p-values for each lag, with the dashed line at $p = 0.05$.}
-  \label{fig:ccf_granger}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig_rolling_corr.png}
-  \caption{Rolling 60-month Pearson correlation between $\Delta$TWS
-    and soybean log-returns at a lag of 5 months. The mean
-    correlation is $-0.291$ and all windows remain negative
-    throughout the entire study period.}
-  \label{fig:rolling}
-\end{figure}
+The 60-month rolling correlation at lag 5 is negative in all windows
+across the full 2002-2025 period, with a mean of $-0.291$, confirming
+the relationship is not caused by a single unusual episode but holds
+consistently over time (rolling correlation plot available in the
+Colab notebook).
 
 \subsection{Spectral Coherence}
 
-Figure~\ref{fig:coherence} shows the squared coherence between the
-TWS index and soybean log-returns across different frequencies. The
-highest coherence value is 0.571, which occurs at a period
-of around 9.6 months. This near-annual peak is consistent with the
-idea that the relationship is driven by the agricultural growing
-season, which repeats on a roughly yearly cycle.
+The squared spectral coherence between the TWS index and soybean
+log-returns peaks at 0.571 near a period of 9.6 months, consistent
+with the agricultural growing season repeating on a roughly yearly
+cycle (coherence plot available in the Colab notebook).
 
 One important caveat: the phase-derived lag at the 9.6-month dominant
 frequency is only about 0.5 months, which appears to contradict the
@@ -394,15 +373,6 @@ inter-annual variability linked to drought events. The 5-month CCF
 result should be interpreted as the predictive horizon and the
 spectral analysis as a confirmation of seasonal co-variation, not as
 an independent lag estimate.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig_coherence.png}
-  \caption{Squared spectral coherence between the TWS drought index
-    and soybean log-returns. The peak of 0.571 near the 9.6-month
-    period reflects the dominant annual growing-season signal.}
-  \label{fig:coherence}
-\end{figure}
 
 \subsection{ENSO Control and Granger Causality}
 
@@ -450,12 +420,13 @@ connection between TWS and soybean prices appears to be mostly
 direct, without NDVI acting as a measurable intermediate step at
 monthly resolution.
 
-The illustrative backtest (Figure~\ref{fig:backtest}) tests a simple
-strategy: go long on soybean futures when the TWS z-score drops
-below $-1\sigma$, entering five months later. The strategy was
-active in only 15\% of months but achieved a Sharpe ratio of
-\textbf{0.34} compared to 0.15 for a simple buy-and-hold approach,
-with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
+The illustrative backtest tests a simple strategy: go long on soybean
+futures when the TWS z-score drops below $-1\sigma$, entering five
+months later. The strategy was active in only 15\% of months but
+achieved a Sharpe ratio of \textbf{0.34} compared to 0.15 for a
+simple buy-and-hold approach, with a much smaller maximum drawdown
+of $-24\%$ versus $-63\%$. The cumulative return chart is available
+in the Colab notebook.
 
 \begin{figure*}[t]
   \centering
@@ -472,17 +443,6 @@ with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
     consistent with the Sobel mediation result ($p = 0.908$).}
   \label{fig:causal}
 \end{figure*}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig6_backtest.png}
-  \caption{Illustrative backtest result (for academic purposes only):
-    cumulative return of the TWS drought strategy (blue) compared
-    to soybean buy-and-hold (red). The strategy is active in 15\%
-    of months and achieves a Sharpe ratio of 0.34 with a maximum
-    drawdown of only $-24\%$.}
-  \label{fig:backtest}
-\end{figure}
 
 % ============================================================
 \FloatBarrier
