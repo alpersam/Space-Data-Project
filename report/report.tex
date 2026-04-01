@@ -413,12 +413,23 @@ to prices and not the other way around.
 
 \subsection{Causal Chain and Backtest}
 
-Figure~\ref{fig:causal} shows the three-step causal chain analysis.
-The Sobel mediation test showed that NDVI does not significantly
-carry the TWS effect to prices (indirect path $p = 0.908$). The
-connection between TWS and soybean prices appears to be mostly
-direct, without NDVI acting as a measurable intermediate step at
-monthly resolution.
+Figure~\ref{fig:causal} shows the bootstrap cross-correlation at
+each step of the proposed causal chain. The TWS$\to$NDVI step
+(top panel) peaks at lag 7 months with $r = -0.084$, which is not
+significant. The NDVI$\to$price step (middle panel) peaks at lag
+3 months with $r = -0.134$, also not significant. Only the direct
+TWS$\to$price path (bottom panel) is statistically significant,
+peaking at lag 5 months with $r = -0.277$ ($p < 0.001$). The
+Sobel mediation test confirms that NDVI carries none of the effect
+(indirect path $p = 0.908$), so the dominant pathway is direct.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig5_causal_chain.png}
+  \caption{Bootstrap cross-correlation at each causal-chain step.
+    Gray bands: 95\% CI; dashed verticals: best lag.}
+  \label{fig:causal}
+\end{figure}
 
 The illustrative backtest tests a simple strategy: go long on soybean
 futures when the TWS z-score drops below $-1\sigma$, entering five
@@ -427,22 +438,6 @@ achieved a Sharpe ratio of \textbf{0.34} compared to 0.15 for a
 simple buy-and-hold approach, with a much smaller maximum drawdown
 of $-24\%$ versus $-63\%$. The cumulative return chart is available
 in the Colab notebook.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.1\textwidth]{fig5_causal_chain.png}
-  \caption{Bootstrap cross-correlation at each step of the proposed
-    causal chain. \textit{Left}: GRACE TWS $\to$ MODIS cropland NDVI
-    (best lag 7 months, $r = -0.084$, not significant). \textit{Centre}:
-    MODIS NDVI $\to$ soybean log-return (best lag 3 months,
-    $r = -0.134$, not significant). \textit{Right}: direct
-    GRACE TWS $\to$ soybean log-return (best lag 5 months,
-    $r = -0.277$, $p < 0.001$). Gray bands are 95\% bootstrap
-    confidence intervals; dashed verticals mark the best lag.
-    Only the direct path (right panel) is statistically significant,
-    consistent with the Sobel mediation result ($p = 0.908$).}
-  \label{fig:causal}
-\end{figure}
 
 % ============================================================
 \FloatBarrier
