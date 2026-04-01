@@ -10,7 +10,7 @@
   left=1.4cm, right=1.4cm,
   columnsep=0.5cm
 ]{geometry}
-\setlength{\parskip}{1.0pt}
+\setlength{\parskip}{1.5pt}
 \setlength{\parindent}{0pt}
 \raggedbottom
 
@@ -178,23 +178,16 @@ April 2002 to December 2025 with no missing months.
 
 \subsection{Study Region and Land Masking}
 
-We chose the bounding box between $25^\circ$S-$8^\circ$S latitude
-and $60^\circ$W-$46^\circ$W longitude because it covers the three
+We chose the bounding box between $25^\circ$S--$8^\circ$S latitude
+and $60^\circ$W--$46^\circ$W longitude because it covers the three
 main soybean-producing states: Mato Grosso, Goiás, and Paraná
-(Figure~\ref{fig:tws_map}). We excluded ocean pixels using the JPL
+(Figure~\ref{fig:overview}a). We excluded ocean pixels using the JPL
 land mask before computing the regional average, because GRACE
 mascons near coastlines can pick up ocean tidal signals that have
-nothing to do with land hydrology.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig1_tws_trend_map.png}
-  \caption{GRACE TWS linear trend map for 2002-2025. The dashed box
-    marks our study region. The red areas over the Cerrado and Paraná
-    show a long-term drying trend that is consistent with ongoing
-    deforestation and regional climate change.}
-  \label{fig:tws_map}
-\end{figure}
+nothing to do with land hydrology. The long-term GRACE TWS trend map
+shows a pronounced drying signal over the Cerrado and Paraná
+(Figure~\ref{fig:overview}a, red shading), consistent with ongoing
+deforestation and regional climate change.
 
 \subsection{Gain Factors}
 
@@ -299,27 +292,17 @@ are as follows:
 
 The regional TWS anomaly ranged from $-33.14$ cm during the 2021
 drought to $+26.10$ cm during a wet period, with a long-term mean
-of $-3.52$ cm and a standard deviation of $13.79$ cm. Figure
-\ref{fig:eof} shows both the spatial pattern of EOF1 and its
-corresponding time series. The loading pattern is concentrated over
-the agricultural belt and the PC1 time series clearly captures the
-four drought episodes we focused on.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig2_eof_pc1.png}
-  \caption{Left: spatial loading of EOF1 over the study region. Right:
-    the PC1 time series used as the GRACE drought index. EOF1 explains
-    58.5\% of total TWS variance. Shaded areas mark months where the
-    PC1 z-score falls below $-1$, a threshold chosen as a reasonable
-    indicator of drought conditions, corresponding to roughly one
-    standard deviation below the long-term mean.}
-  \label{fig:eof}
-\end{figure}
+of $-3.52$ cm and a standard deviation of $13.79$ cm. The spatial
+loading of EOF1 is concentrated over the agricultural belt of Mato
+Grosso and Goiás, confirming that the dominant water-storage mode
+aligns with the main soybean-growing area. The PC1 time series clearly
+captures the four drought episodes (2005, 2010, 2015, 2021), visible
+in Figure~\ref{fig:overview}b as the moments when TWS drops sharply
+and soybean prices subsequently spike.
 
 \subsection{Multi-Signal Overview}
 
-Figure~\ref{fig:overlay} shows all four main time series together.
+Figure~\ref{fig:overview}b shows all four main time series together.
 Looking at the plot, TWS minima tend to occur a few months before
 soybean price spikes, which is the pattern we expected based on the
 growing season calendar. The ERA5 water balance and NDVI series
@@ -327,20 +310,24 @@ broadly track the TWS signal, though with less amplitude.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{fig3_overlay.png}
-  \caption{All four time series plotted together for 2002-2025:
+  \includegraphics[width=\textwidth]{figA_data_overview.png}
+  \caption{\textbf{(a)} GRACE TWS linear trend map for 2002--2025.
+    The dashed box marks our study region; red shading indicates
+    long-term drying over the Cerrado and Paraná, consistent with
+    deforestation and climate change.
+    \textbf{(b)} All four time series plotted together for 2002--2025:
     GRACE TWS anomaly (blue), MODIS cropland NDVI anomaly (green),
-    ERA5 precipitation minus evapotranspiration (orange), and soybean
-    log-returns (red). The dashed vertical lines mark drought onset
-    months and the arrows indicate the approximate five-month lead
-    of TWS before the price response.}
-  \label{fig:overlay}
+    ERA5 precipitation minus evapotranspiration (purple), and soybean
+    futures (red). Dashed verticals mark drought onset months; arrows
+    indicate the approximate five-month lead of TWS before the price
+    response.}
+  \label{fig:overview}
 \end{figure*}
 
 \subsection{Cross-Correlation and Optimal Lag}
 
-The cross-correlation analysis (Figure~\ref{fig:ccf_granger}) shows
-the strongest negative correlation at lag 5 months
+The cross-correlation analysis (Figure~\ref{fig:statistics}a, left panel)
+shows the strongest negative correlation at lag 5 months
 ($r = -0.277$, with a 95\% confidence interval bound of $\pm 0.134$).
 The negative sign makes physical sense: when TWS decreases (drought),
 soybean prices tend to increase five months later. Lags 4 and 6 are
@@ -348,61 +335,42 @@ also statistically significant ($r = -0.183$ and $r = -0.166$),
 which suggests that the predictive signal is spread across a window
 of a few months rather than concentrated at a single lag.
 
-The rolling correlation analysis (Figure~\ref{fig:rolling}) shows
+The rolling correlation analysis (Figure~\ref{fig:statistics}b) shows
 that the 60-month rolling correlation at lag 5 is negative in
 all windows across the full 2002-2025 period, with a mean
 of $-0.291$. This tells us that the relationship is not caused by
 a single unusual episode but holds consistently over time.
 
-\begin{figure}[htbp]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\columnwidth]{fig4_correlogram_granger.png}
-  \caption{Top: bootstrap cross-correlation between $\Delta$TWS and
-    soybean log-returns at lags 0 to 12 months. The dashed lines
-    are the 95\% confidence interval bounds. Bottom: Granger test
-    p-values for each lag, with the dashed line at $p = 0.05$.}
-  \label{fig:ccf_granger}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig_rolling_corr.png}
-  \caption{Rolling 60-month Pearson correlation between $\Delta$TWS
-    and soybean log-returns at a lag of 5 months. The mean
-    correlation is $-0.291$ and all windows remain negative
-    throughout the entire study period.}
-  \label{fig:rolling}
-\end{figure}
+  \includegraphics[width=\textwidth]{figB_statistics.png}
+  \caption{\textbf{(a)} Bootstrap cross-correlation between $\Delta$TWS and
+    soybean log-returns (left: Pearson $r$ at lags 0--12 months with 95\%
+    bootstrap CI; right: Granger F-test $-\!\log_{10}(p)$ per lag, dashed line
+    at $p = 0.05$).
+    \textbf{(b)} Rolling 60-month Pearson correlation at lag 5: mean
+    $r = -0.291$; all windows remain negative throughout the 2002--2025 period,
+    confirming that the predictive relationship is structural, not driven by
+    isolated events.}
+  \label{fig:statistics}
+\end{figure*}
 
 \subsection{Spectral Coherence}
 
-Figure~\ref{fig:coherence} shows the squared coherence between the
-TWS index and soybean log-returns across different frequencies. The
-highest coherence value is 0.571, which occurs at a period
-of around 9.6 months. This near-annual peak is consistent with the
-idea that the relationship is driven by the agricultural growing
-season, which repeats on a roughly yearly cycle.
-
-One important caveat: the phase-derived lag at the 9.6-month dominant
-frequency is only about 0.5 months, which appears to contradict the
-5-month predictive lag found in the cross-correlation analysis. These
-two quantities are not directly comparable. The spectral phase measures
-the average timing offset at the \emph{annual cycle} frequency
+The squared coherence between the TWS index and soybean log-returns
+peaks at 0.571 near a period of 9.6 months. This near-annual peak is
+consistent with the agricultural growing season repeating on a roughly
+yearly cycle. One important caveat: the phase-derived lag at the
+9.6-month dominant frequency is only about 0.5 months, which appears
+to contradict the 5-month predictive lag from the cross-correlation.
+These two quantities are not directly comparable. The spectral phase
+measures the average timing offset at the \emph{annual cycle} frequency
 specifically, whereas the CCF lag of 5 months reflects the
 \emph{broadband} lag structure that includes lower-frequency
 inter-annual variability linked to drought events. The 5-month CCF
 result should be interpreted as the predictive horizon and the
 spectral analysis as a confirmation of seasonal co-variation, not as
 an independent lag estimate.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig_coherence.png}
-  \caption{Squared spectral coherence between the TWS drought index
-    and soybean log-returns. The peak of 0.571 near the 9.6-month
-    period reflects the dominant annual growing-season signal.}
-  \label{fig:coherence}
-\end{figure}
 
 \subsection{ENSO Control and Granger Causality}
 
@@ -416,7 +384,9 @@ unrelated to the state of the tropical Pacific.
 The Granger causality test shows that past values of $\Delta$TWS
 significantly improve the prediction of soybean returns at lag 5
 ($F = 4.27$, $p = 0.001$). The results are summarised in
-Table~\ref{tab:granger}. Importantly, the reverse test (whether
+Table~\ref{tab:granger}. The right panel of Figure~\ref{fig:statistics}a
+confirms this: $-\!\log_{10}(p)$ exceeds the $p = 0.05$ threshold at
+lags 1, 4, 5, and 6. Importantly, the reverse test (whether
 soybean prices help predict TWS) is not significant ($p = 0.766$),
 which confirms that the causal direction runs from water storage
 to prices and not the other way around.
@@ -443,15 +413,15 @@ to prices and not the other way around.
 
 \subsection{Causal Chain and Backtest}
 
-Figure~\ref{fig:causal} shows the three-step causal chain analysis.
-The Sobel mediation test showed that NDVI does not significantly
-carry the TWS effect to prices (indirect path $p = 0.908$). The
-connection between TWS and soybean prices appears to be mostly
-direct, without NDVI acting as a measurable intermediate step at
-monthly resolution.
+Figure~\ref{fig:causal_backtest}a shows the three-step causal chain
+analysis. The Sobel mediation test showed that NDVI does not
+significantly carry the TWS effect to prices (indirect path
+$p = 0.908$). The connection between TWS and soybean prices appears
+to be mostly direct, without NDVI acting as a measurable
+intermediate step at monthly resolution.
 
-The illustrative backtest (Figure~\ref{fig:backtest}) tests a simple
-strategy: go long on soybean futures when the TWS z-score drops
+The illustrative backtest (Figure~\ref{fig:causal_backtest}b) tests a
+simple strategy: go long on soybean futures when the TWS z-score drops
 below $-1\sigma$, entering five months later. The strategy was
 active in only 15\% of months but achieved a Sharpe ratio of
 \textbf{0.34} compared to 0.15 for a simple buy-and-hold approach,
@@ -459,8 +429,8 @@ with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{fig5_causal_chain.png}
-  \caption{Bootstrap cross-correlation at each step of the proposed
+  \includegraphics[width=\textwidth]{figC_causal_backtest.png}
+  \caption{\textbf{(a)} Bootstrap cross-correlation at each step of the proposed
     causal chain. \textit{Left}: GRACE TWS $\to$ MODIS cropland NDVI
     (best lag 7 months, $r = -0.084$, not significant). \textit{Centre}:
     MODIS NDVI $\to$ soybean log-return (best lag 3 months,
@@ -468,21 +438,15 @@ with a much smaller maximum drawdown of $-24\%$ versus $-63\%$.
     GRACE TWS $\to$ soybean log-return (best lag 5 months,
     $r = -0.277$, $p < 0.001$). Gray bands are 95\% bootstrap
     confidence intervals; dashed verticals mark the best lag.
-    Only the direct path (right panel) is statistically significant,
-    consistent with the Sobel mediation result ($p = 0.908$).}
-  \label{fig:causal}
-\end{figure*}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig6_backtest.png}
-  \caption{Illustrative backtest result (for academic purposes only):
+    Only the direct path is statistically significant, consistent
+    with the Sobel mediation result ($p = 0.908$).
+    \textbf{(b)} Illustrative backtest result (for academic purposes only):
     cumulative return of the TWS drought strategy (blue) compared
-    to soybean buy-and-hold (red). The strategy is active in 15\%
+    to soybean buy-and-hold (red dashed). The strategy is active in 15\%
     of months and achieves a Sharpe ratio of 0.34 with a maximum
     drawdown of only $-24\%$.}
-  \label{fig:backtest}
-\end{figure}
+  \label{fig:causal_backtest}
+\end{figure*}
 
 % ============================================================
 \FloatBarrier

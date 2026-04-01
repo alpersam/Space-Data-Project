@@ -14,7 +14,8 @@
       "Bash(\"C:/Users/alper/AppData/Local/Temp/test_ee3.py\":*)",
       "Bash(\"C:\\\\Users\\\\alper\\\\.conda\\\\envs\\\\spacedata\\\\python.exe\" \"C:/Users/alper/AppData/Local/Temp/test_ee3.py\")",
       "Bash(chcp 65001)",
-      "Bash(iconv -f UTF-8 -t ASCII//TRANSLIT)"
+      "Bash(iconv -f UTF-8 -t ASCII//TRANSLIT)",
+      "Bash(python3:*)"
     ]
   }
 }
