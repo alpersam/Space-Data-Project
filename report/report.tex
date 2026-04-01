@@ -181,19 +181,20 @@ April 2002 to December 2025 with no missing months.
 We chose the bounding box between $25^\circ$S-$8^\circ$S latitude
 and $60^\circ$W-$46^\circ$W longitude because it covers the three
 main soybean-producing states: Mato Grosso, Goiás, and Paraná
-(Figure~\ref{fig:tws_map}). We excluded ocean pixels using the JPL
-land mask before computing the regional average, because GRACE
+(Figure~\ref{fig:spatial}, top). We excluded ocean pixels using the
+JPL land mask before computing the regional average, because GRACE
 mascons near coastlines can pick up ocean tidal signals that have
 nothing to do with land hydrology.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\columnwidth]{fig1_tws_trend_map.png}
-  \caption{GRACE TWS linear trend map for 2002-2025. The dashed box
-    marks our study region. The red areas over the Cerrado and Paraná
-    show a long-term drying trend that is consistent with ongoing
-    deforestation and regional climate change.}
-  \label{fig:tws_map}
+  \includegraphics[width=\columnwidth]{fig1_tws_trend_map.png}\\[4pt]
+  \includegraphics[width=\columnwidth]{fig2_eof_pc1.png}
+  \caption{Top: GRACE TWS linear trend map 2002-2025; dashed box marks
+    the study region. Bottom left: EOF1 spatial loading (58.5\% of
+    variance). Bottom right: PC1 time series used as the drought index;
+    shaded months have z-score $< -1$.}
+  \label{fig:spatial}
 \end{figure}
 
 \subsection{Gain Factors}
@@ -299,23 +300,11 @@ are as follows:
 
 The regional TWS anomaly ranged from $-33.14$ cm during the 2021
 drought to $+26.10$ cm during a wet period, with a long-term mean
-of $-3.52$ cm and a standard deviation of $13.79$ cm. Figure
-\ref{fig:eof} shows both the spatial pattern of EOF1 and its
-corresponding time series. The loading pattern is concentrated over
-the agricultural belt and the PC1 time series clearly captures the
-four drought episodes we focused on.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\columnwidth]{fig2_eof_pc1.png}
-  \caption{Left: spatial loading of EOF1 over the study region. Right:
-    the PC1 time series used as the GRACE drought index. EOF1 explains
-    58.5\% of total TWS variance. Shaded areas mark months where the
-    PC1 z-score falls below $-1$, a threshold chosen as a reasonable
-    indicator of drought conditions, corresponding to roughly one
-    standard deviation below the long-term mean.}
-  \label{fig:eof}
-\end{figure}
+of $-3.52$ cm and a standard deviation of $13.79$ cm. The long-term
+drying trend visible in Figure~\ref{fig:spatial} (top) is mirrored
+by the EOF1 loading pattern (bottom left), which is concentrated over
+the agricultural belt. The PC1 time series (bottom right) clearly
+captures the four drought episodes we focused on.
 
 \subsection{Multi-Signal Overview}
 
