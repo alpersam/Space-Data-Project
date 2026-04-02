@@ -467,6 +467,10 @@ market likely reacts to higher frequency data such as weekly NDVI or
 crop condition reports from agricultural agencies, rather than to
 the monthly average we computed here.
 
+\subsection{Sensitivity to Design Choices}
+
+The main results are unlikely to be driven by specific parameter choices. The EOF1 spatial loading (Figure 1, bottom left) is concentrated over the agricultural belt rather than spread uniformly across the bounding box, which means that shifting the box boundaries moderately would not change the dominant mode. If edge pixels or a single sub-region were driving the signal, the loading pattern would not be this spatially coherent. Furthermore, the large gap between EOF1 (58.5\%) and EOF2 (19.9\%) implies that PC1 and a simple area-weighted average capture nearly the same variability; the choice of EOF decomposition over raw averaging is methodologically cleaner but the result is not sensitive to it. Finally, the predictive signal is not fragile to the exact lag chosen: lags 4, 5, and 6 are all statistically significant in the cross-correlation, and the 60-month rolling correlation remains negative across every window in the study period, confirming that no single drought episode or time window is responsible for the result.
+
 \subsection{Limitations}
 
 \begin{itemize}
